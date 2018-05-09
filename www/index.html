@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <title>Geolocation</title>
+    <style>
+        #map{
+            height: 100%;
+        }
+        html, body{
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <center><h1>Geolocation Básico</h1></center>
+    <div id="map"></div>
+    <script>
+        function initMap(){
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: -34.397, lng: 150.644},
+                zoom: 6
+            });
+
+            var infoWindow = new google.maps.InfoWindow({map: map});
+
+            //tentar abrir com html 5 puro
+
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(function(position){
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Localização Encontrada!');
+                    map.setCenter(pos);
+                }, function(){
+                    handleLocationError(true, infoWindow, map.getCenter())
+                });
+            }
+            else{
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos){
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Erro: A geolocalização é falsa!':
+                'Erro: Seu browser não suporta geolocalização!');
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADsrMP2U_Co19atE6yvSyPTgCWN5T4t68&callback=initMap" async defer></script>
+</body>
+</html>
